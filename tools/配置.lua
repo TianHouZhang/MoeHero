@@ -1,9 +1,11 @@
 local ydwe = require 'tools.ydwe'
-local subprocess = require 'bee.subprocess'
+local process = require 'process'
 if not ydwe then
     return
 end
 print('YDWE:', ydwe:string())
-subprocess.spawn {
-    ydwe / 'bin' / 'ydweconfig.exe'
-}
+local p = process()
+local app = ydwe / 'bin' / 'ydweconfig.exe'
+if not p:create(app, ('"%s"'):format(app:string()), ydwe / 'bin') then
+    print('启动YDWE配置失败')
+end

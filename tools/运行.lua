@@ -1,7 +1,7 @@
-local fs = require 'bee.filesystem'
-local registry = require 'bee.registry'
+require 'filesystem'
+local registry = require 'registry'
 local ydwe = require 'tools.ydwe'
-local subprocess = require 'bee.subprocess'
+local process = require 'process'
 if not ydwe then
     return
 end
@@ -26,8 +26,9 @@ end
 if get_debugger() then
     --command = command .. ' -debugger 4278'
 end
-subprocess.spawn {
-    ydwe / 'ydwe.exe',
-    '-war3',
-    '-loadfile', root / 'MoeHero.w3x',
-}
+local p = process()
+local app = ydwe / 'ydwe.exe'
+local command = ('"%s" -war3 -loadfile "%s"'):format(app:string(), (root / 'MoeHero.w3x'):string())
+if not p:create(app, command, ydwe) then
+    print('启动YDWE失败')
+end
