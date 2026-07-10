@@ -248,13 +248,14 @@ function helper:hotfix()
 end
 
 --临时热更命令
-function helper:rc()
-	package.loaded['maps.rule.circle_motion'] = nil
-	local mod = require 'maps.rule.circle_motion'
-	if type(mod) == 'table' and type(mod.hot_reload) == 'function' then
-		mod.hot_reload()
+function helper:rr()
+	for name in pairs(package.loaded) do
+		if name:match('^maps%.rule') then
+			package.loaded[name] = nil
+		end
 	end
-	self:get_owner():sendMsg('circle_motion 已重载，重新输入 -circle 测试')
+	require 'maps.rule.init'
+	self:get_owner():sendMsg('maps.rule 已重载')
 end
 
 --显示伤害漂浮文字
