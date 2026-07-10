@@ -5,6 +5,7 @@ mt {
     art = [[ReplaceableTextures\CommandButtons\BTNImmolationOn.blp]],
     title = '光击阵',
     tip = [[在目标点延迟%delay%秒引爆火焰，对%area%范围敌方单位造成%damage%(+%damage_plus%)伤害并晕眩%stun_time%秒。]],
+    show_cd = 1,
     cool = {12, 10},
     cost = {90, 120},
     range = 900,

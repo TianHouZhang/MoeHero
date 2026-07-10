@@ -8,6 +8,7 @@ mt {
     title = '神灭斩',
     tip = [[发射一道高能火焰斩击，对目标敌方单位造成%damage%(+%damage_plus%)伤害。该次伤害额外提高%damage_pene_rate%%穿透。
 	]],
+    show_cd = 1,
     cool = {70, 55, 40},
     cost = {120, 180, 240},
     range = 700,
