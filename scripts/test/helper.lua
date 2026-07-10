@@ -247,6 +247,16 @@ function helper:hotfix()
 	require('types.hot_fix').main(self:get_owner())
 end
 
+--临时热更命令
+function helper:rc()
+	package.loaded['maps.rule.circle_motion'] = nil
+	local mod = require 'maps.rule.circle_motion'
+	if type(mod) == 'table' and type(mod.hot_reload) == 'function' then
+		mod.hot_reload()
+	end
+	self:get_owner():sendMsg('circle_motion 已重载，重新输入 -circle 测试')
+end
+
 --显示伤害漂浮文字
 function helper:show()
 	local function text(damage)
