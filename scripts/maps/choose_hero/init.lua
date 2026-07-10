@@ -122,6 +122,7 @@ local function start()
 	local cent	= map.rects['选人区域']:get_point()
 	local r		= 360 / hero.hero_count
 	radius		= math.sqrt(hero.hero_count - 1) * 120
+	local created_hero_names = {}
 	
 	for i, hero_type in ipairs(hero.hero_list) do
 		local name, hero_data = hero_type[1], hero_type.data
@@ -131,17 +132,29 @@ local function start()
 		jass.DestroyImage(shadow02)
 		local hero_id = hero_data.id
 		local hero_slk = slk.unit[hero_id]
+		if not hero_slk then
+			log.error(('选人区创建英雄失败: 英雄[%s]的单位ID[%s]不存在于slk.unit'):format(tostring(name), tostring(hero_id)))
+			jass.DestroyImage(shadow01)
+			goto continue
+		end
 		local hero = player[16]:create_unit(hero_id, cent - {r * i + 90, radius}, r * i - 90)
+		if not hero then
+			log.error(('选人区创建英雄失败: name=%s id=%s'):format(tostring(name), tostring(hero_id)))
+			jass.DestroyImage(shadow01)
+			goto continue
+		end
 		hero.name = name
 		player[16]:create_unit('h002',cent - {r * i + 90, radius-50}, r * i - 90)
 		hero:set_high(3000)
 		hero:remove_ability 'Amov'
 		hero:add_restriction '缴械'
 		hero_types[name] = hero
+		table.insert(created_hero_names, name)
 		hero:set_data('英雄类型', name)
 		setHeroState(hero)
 		jass.DestroyImage(shadow01)
 		table.insert(flygroup, hero)
+		::continue::
 	end
 
 	--初始化英雄漂浮
@@ -167,8 +180,10 @@ local function start()
 
 		--看着一个英雄
 		
-		local name = hero.hero_list[math.random(1, #hero.hero_list)][1]
-		lookAtHero(p, hero_types[name], true)
+		if #created_hero_names > 0 then
+			local name = created_hero_names[math.random(1, #created_hero_names)]
+			lookAtHero(p, hero_types[name], true)
+		end
 	end
 
 	--启动计时器
