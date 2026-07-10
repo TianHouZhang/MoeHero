@@ -15,6 +15,8 @@ require 'maps.rule.visible'
 require 'maps.rule.multiboard'
 require 'maps.rule.tips'
 require 'maps.rule.sound'
+require 'maps.rule.chat_command'
+require 'maps.rule.circle_motion'
 --require 'maps.rule.积分'
 require 'maps.rule.新积分'
 
