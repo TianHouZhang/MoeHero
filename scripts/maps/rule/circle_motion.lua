@@ -1,5 +1,5 @@
 local UPDATE_MS = 20
-local MIN_DURATION_MS = 12000
+local MIN_DURATION_MS = 1200
 local BLOOD_EFFECT_MODEL = [[Objects\Spawnmodels\Human\HumanBlood\BloodElfSpellThiefBlood.mdl]]
 local BLOOD_EFFECT_INTERVAL_MS = 180
 
