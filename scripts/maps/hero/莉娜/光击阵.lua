@@ -13,6 +13,7 @@ mt {
     cast_start_time = 0.2,
     delay = 0.5,
     area = 260,
+    scorch_time = 2.0,
     stun_time = {1.2, 1.6},
     damage = {100, 240},
     damage_plus = function(self, hero)
@@ -32,6 +33,13 @@ function mt:on_cast_channel()
             return
         end
         point:add_effect([[Abilities\Spells\Human\FlameStrike\FlameStrike1.mdl]]):remove()
+        point:add_effect([[Objects\Spawnmodels\Other\NeutralBuildingExplosion\NeutralBuildingExplosion.mdl]]):remove()
+        local scorch = point:add_effect([[Abilities\Spells\Other\Doom\DoomDeath.mdl]])
+        hero:wait(self.scorch_time * 1000, function()
+            if scorch then
+                scorch:remove()
+            end
+        end)
         for _, u in ac.selector():in_range(point, self.area):is_enemy(hero):ipairs() do
             u:add_buff '晕眩' {
                 source = hero,
