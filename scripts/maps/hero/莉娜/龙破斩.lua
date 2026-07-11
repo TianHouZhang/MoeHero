@@ -24,9 +24,10 @@ mt {
 function mt:on_cast_channel()
     local hero = self.owner
     local mvr = ac.mover.line {
+        id = 'H015',
         source = hero,
         target = self.target,
-        model = [[Abilities\Weapons\PhoenixMissile\Phoenix_Missile.mdl]],
+        -- model = [[Abilities\Weapons\PhoenixMissile\Phoenix_Missile.mdl]],
         distance = self.distance,
         speed = self.speed,
         hit_area = self.hit_area,
@@ -37,6 +38,14 @@ function mt:on_cast_channel()
 
     if not mvr then
         return
+    end
+
+    function mvr:on_remove()
+        if self.missile and self.mover then
+            -- Use direct remove to avoid dummy death residue when using custom id.
+            self.missile = false
+            self.mover:remove()
+        end
     end
 
     function mvr:on_hit(target)
