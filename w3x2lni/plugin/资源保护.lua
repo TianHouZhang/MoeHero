@@ -7,11 +7,26 @@ mt.info = {
     description = '没有资源目录时，将模型替换为步兵。'
 }
 
+local function should_replace_model(w2l, has_resource_dir, model, ignore)
+    local lower_model = model:lower()
+    if ignore[lower_model] then
+        return false
+    end
+    if not has_resource_dir then
+        return true
+    end
+    if w2l:file_load('resource', model) then
+        return false
+    end
+    if w2l:mpq_load(model) then
+        return false
+    end
+    return true
+end
+
 function mt:on_full(w2l)
     if w2l.input_mode == 'lni' and (w2l.setting.mode == 'obj' or w2l.setting.mode == 'slk') then
-        if fs.exists(w2l.setting.input / 'resource') then
-            return
-        end
+        local has_resource_dir = fs.exists(w2l.setting.input / 'resource')
         
         local ignore = {
             [".mdx"] = true,
@@ -20,10 +35,12 @@ function mt:on_full(w2l)
         }
         
         for id, u in pairs(w2l.slk.unit) do
-            if u.file and not ignore[u.file:lower()] then
+            if u.file and should_replace_model(w2l, has_resource_dir, u.file, ignore) then
                 u.file = [[units\human\Footman\Footman.mdx]]
-            end
-            if u.art then
+                if u.art then
+                    u.art = [[ReplaceableTextures\CommandButtons\BTNFootman.blp]]
+                end
+            elseif u.art and not has_resource_dir then
                 u.art = [[ReplaceableTextures\CommandButtons\BTNFootman.blp]]
             end
         end
